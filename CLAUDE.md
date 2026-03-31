@@ -14,7 +14,7 @@ n8n on pulsar00100 ties into the entire thebardchat infrastructure:
 
 ### Core Services (shanebrain-core)
 - **ShaneBrain Core** (`thebardchat/shanebrain-core`) — 9 services on Pi 5: Discord bot, RAG pipeline, voice pipeline, social automation, dispatch PWA
-- **ShaneBrain MCP Server** (`thebardchat/shanebrain_mcp`) — Custom-built 27-tool MCP server for Weaviate RAG + Ollama. Knowledge, chat, vault, planning tools
+- **ShaneBrain MCP Server** (`thebardchat/shanebrain_mcp`) — Custom-built 42-tool MCP server for Weaviate RAG + Ollama. Knowledge, chat, vault, planning tools
 - **Weaviate** — Vector database backing RAG and semantic search across the ecosystem
 - **Ollama** — Local LLM inference
 
@@ -27,7 +27,7 @@ n8n on pulsar00100 ties into the entire thebardchat infrastructure:
 ### Work/Operations
 - **MASTER Scheduler Dashboard** (`thebardchat/MASTER-Scheduler-Dashboard-SRM`) — SRM Concrete dispatch: 16 drivers, 19 plants, block plant priority routing
 - **SB-Management-OS** (`thebardchat/SB-Management-OS`) — SOPs, coaching scripts, personnel management
-- **SRM Dispatch** (`thebardchat/srm-dispatch`) — Daily dispatch PWA for route planning
+- **MASTER Scheduler** (`thebardchat/MASTER-Scheduler-Dashboard-SRM`) — Daily dispatch PWA + SOPs (srm-dispatch archived/merged)
 
 ### Security & Infrastructure
 - **Pulsar Sentinel** (`thebardchat/pulsar_sentinel`) — Post-quantum cryptography security framework (ML-KEM, blockchain audit trails)
@@ -58,7 +58,7 @@ pulsar00100 (host machine)
 │   ├── Voice pipeline
 │   └── Social automation
 │
-├── shanebrain_mcp (27-tool MCP server)
+├── shanebrain_mcp (42-tool MCP server)
 │   ├── Weaviate RAG tools
 │   ├── Ollama inference
 │   ├── Vault / knowledge store
@@ -133,7 +133,8 @@ These are the key connections n8n will manage:
 |---------|----------------|---------|
 | ShaneBrain MCP | HTTP/REST | Trigger MCP tools, query Weaviate via RAG |
 | Weaviate | REST API | Direct vector DB queries, data ingestion |
-| Ollama | REST API (port 11434) | Local LLM inference for workflow logic |
+| Ollama Cluster | Proxy port 11435 (4 nodes) | Load-balanced LLM inference — auto-routes to fastest node |
+| Mega Dashboard | HTTPS port 8300 | Live monitoring — weather, sobriety, cluster, Pico, GitHub stars, Promote tab |
 | Discord | Webhooks + Bot API | Event triggers, automated messages, bot commands |
 | Angel Cloud | REST API | Wellness check-ins, sentiment data flows |
 | HaloFinance | REST API | Financial data processing, alerts |
