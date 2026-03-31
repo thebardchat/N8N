@@ -1,0 +1,5 @@
+{
+  "pulsar_event": {"event":"","source":"","details":"","severity":"low|medium|high","timestamp":""},
+  "brain_command": {"action":"","driver":"","loads":"","product":"","destination":"","priority":"","message":"","notes":""},
+  "supported_actions": ["create_order","create_alert","log_event","schedule_driver","update_loads","cancel_order","driver_status","plant_status","daily_summary"]
+}
