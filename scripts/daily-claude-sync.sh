@@ -119,4 +119,13 @@ if [[ "$CHANGES_MADE" = false ]]; then
     log "No changes needed — everything in sync"
 fi
 
+# --- 8. Propagate global CLAUDE.md to all ecosystem repos ---
+DEPLOY_SCRIPT="$(dirname "$0")/deploy-global-claude-md.sh"
+if [[ -x "$DEPLOY_SCRIPT" ]]; then
+    log "Running global CLAUDE.md deploy to all repos..."
+    "$DEPLOY_SCRIPT" "$GLOBAL_MD" >> "$LOG_FILE" 2>&1 || log "WARN: Deploy script had errors — check log"
+else
+    log "WARN: Deploy script not found or not executable at $DEPLOY_SCRIPT"
+fi
+
 log "=== Daily CLAUDE.md sync complete ==="
