@@ -1,0 +1,60 @@
+{
+  "name": "GitHub Push → Discord + Weaviate",
+  "nodes": [
+    {
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [240, 300],
+      "parameters": {
+        "path": "github-push",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      }
+    },
+    {
+      "name": "Filter Repos",
+      "type": "n8n-nodes-base.code",
+      "position": [460, 300],
+      "parameters": {
+        "jsCode": "const repo = items[0].json.body?.repository?.name || '';\nconst watched = ['shanebrain-agents','mega-crew','shanebrain_mcp','pico-nerve-endings','mega-crew-stories'];\nif (!watched.includes(repo)) return [];\nconst pusher = items[0].json.body?.pusher?.name || 'unknown';\nconst commits = items[0].json.body?.commits || [];\nconst branch = (items[0].json.body?.ref || '').replace('refs/heads/','');\nreturn [{ json: { repo, pusher, branch, commit_count: commits.length, message: commits[0]?.message || '', url: items[0].json.body?.compare || '' } }];"
+      }
+    },
+    {
+      "name": "Discord Notify",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [680, 220],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={\n  \"content\": null,\n  \"embeds\": [{\n    \"title\": \"🔧 Push to `{{ $json.repo }}`\",\n    \"description\": \"**{{ $json.commit_count }}** commit(s) on `{{ $json.branch }}`\\n\\n> {{ $json.message }}\",\n    \"color\": 7340237,\n    \"fields\": [\n      { \"name\": \"Pusher\", \"value\": \"{{ $json.pusher }}\", \"inline\": true },\n      { \"name\": \"Repo\", \"value\": \"[{{ $json.repo }}](https://github.com/thebardchat/{{ $json.repo }})\", \"inline\": true }\n    ],\n    \"url\": \"{{ $json.url }}\",\n    \"footer\": { \"text\": \"ShaneBrain Ecosystem · N8N\" }\n  }]\n}"
+      }
+    },
+    {
+      "name": "Log to ShaneBrain MCP",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [680, 400],
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8100/mcp",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={\n  \"tool\": \"shanebrain_add_knowledge\",\n  \"arguments\": {\n    \"content\": \"GitHub push to {{ $json.repo }} ({{ $json.branch }}): {{ $json.commit_count }} commit(s) — {{ $json.message }}\",\n    \"source\": \"github-webhook\",\n    \"tags\": [\"github\", \"{{ $json.repo }}\", \"push\"]\n  }\n}"
+      }
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": {
+      "main": [[{ "node": "Filter Repos" }]]
+    },
+    "Filter Repos": {
+      "main": [
+        [
+          { "node": "Discord Notify" },
+          { "node": "Log to ShaneBrain MCP" }
+        ]
+      ]
+    }
+  }
+}
