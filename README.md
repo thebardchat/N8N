@@ -9,7 +9,7 @@
 [![MCP Tools](https://img.shields.io/badge/MCP%20Tools-42-purple)](https://github.com/thebardchat/shanebrain_mcp)
 [![Sponsor](https://img.shields.io/badge/Sponsor-thebardchat-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/thebardchat)
 
-*Running on pulsar00100 — the fastest node in the 4-node Ollama cluster.*
+*Running on pulsar00100 — the fastest node in the Weaviate + MCP stack.*
 
 </div>
 
@@ -17,13 +17,13 @@
 
 ## What This Does
 
-n8n connects every service in the ShaneBrain network: the 42-tool MCP server, Weaviate vector DB, 4-node Ollama cluster, Discord bots, Angel Cloud, Mega Dashboard, HaloFinance, SRM dispatch operations, Facebook automation, voice pipeline, and everything else.
+n8n connects every service in the ShaneBrain network: the 42-tool MCP server, Weaviate vector DB, Weaviate + MCP stack, Discord bots, Angel Cloud, Mega Dashboard, HaloFinance, SRM dispatch operations, Facebook automation, voice pipeline, and everything else.
 
 ## The Cluster
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│              4-NODE OLLAMA CLUSTER                    │
+│              Weaviate + MCP stack                    │
 │                                                      │
 │  Pulsar (fastest) ←── n8n runs HERE                  │
 │  Pi 5 (controller) ←── all services, Weaviate, MCP  │
