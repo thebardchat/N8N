@@ -9,7 +9,7 @@
 [![MCP Tools](https://img.shields.io/badge/MCP%20Tools-42-purple)](https://github.com/thebardchat/shanebrain_mcp)
 [![Sponsor](https://img.shields.io/badge/Sponsor-thebardchat-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/thebardchat)
 
-*Running on pulsar00100 — the fastest node in the Weaviate + MCP stack.*
+*Running on neworleans — alongside Weaviate, Postgres, and Redis.*
 
 </div>
 
@@ -25,25 +25,24 @@ n8n connects every service in the ShaneBrain network: the 42-tool MCP server, We
 ┌─────────────────────────────────────────────────────┐
 │              Weaviate + MCP stack                    │
 │                                                      │
-│  Pulsar (fastest) ←── n8n runs HERE                  │
-│  Pi 5 (controller) ←── all services, Weaviate, MCP  │
-│  Bullfrog ←── worker node                            │
-│  Jaxton ←── worker node                              │
+│  neworleans (data node) ←── n8n + Postgres + Redis   │
+│  Pi 5 (controller) ←── all services, MCP, Docker     │
+│                         Swarm manager                │
 │                                                      │
-│  All headless. All auto-start. All auto-failover.    │
+│  All headless. All auto-start.                       │
 └─────────────────────────────────────────────────────┘
 ```
 
 ## Quick Start
 
 ```bash
-# On pulsar00100:
+# On neworleans:
 git clone https://github.com/thebardchat/N8N.git
 cd N8N
 cp .env.example .env
-docker-compose up -d
+docker-compose -f docker/docker-compose.yml up -d
 
-# Access UI at http://100.81.70.117:5678
+# Access UI at http://neworleans:5678
 ```
 
 ## Connected Services
@@ -51,8 +50,8 @@ docker-compose up -d
 | Service | Tools | Connection |
 |---------|-------|-----------|
 | **ShaneBrain MCP** | 42 tools | HTTP :8100 — knowledge, chat, vault, planning, security, weather, reminders, and more |
-| **Weaviate** | 17 collections | REST :8080 — vector DB, 210+ knowledge objects |
-| **Ollama Cluster** | 4 nodes | Proxy :11435 — auto-routes to fastest available node |
+| **Weaviate** | 25 collections | REST :8080 (on neworleans) — vector DB, 210+ knowledge objects |
+| **Gemma Cluster** | 3 nodes | biloxi/gulfshores/alaska :8080 — OpenAI-compatible inference (Ollama fully removed 2026-05-07) |
 | **Mega Dashboard** | Live monitoring | HTTPS :8300 — weather, sobriety, services, cluster, Pico, GitHub stars |
 | **Discord Bots** | 3 bots | Webhooks — shanebrain, arcade, alerter |
 | **Angel Cloud** | Gateway | :4200 — auth, chat, leaderboard, Messenger webhook |
